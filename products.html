@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Products - Deem & Store</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="products.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="main.png" alt="Deem & Store Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="index.html#products">Products</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <div class="cart">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+        </nav>
+    </header>
+
+    <section class="products-section">
+        <div class="products-container">
+            <h2>Our Products</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="1.png" alt="Fashion">
+                    <h3>Fashion Collection</h3>
+                    <p>Explore our latest fashion trends and stylish outfits.</p>
+                    <button onclick="openOrderForm('Fashion Collection', '1.png')" class="order-button">Order Now</button>
+                </div>
+                <div class="product-card">
+                    <img src="2.png" alt="Accessories">
+                    <h3>Accessories</h3>
+                    <p>Complete your look with our premium selection.</p>
+                    <button onclick="openOrderForm('Accessories', '2.png')" class="order-button">Order Now</button>
+                </div>
+                <div class="product-card">
+                    <img src="3.jpg" alt="Footwear">
+                    <h3>Footwear</h3>
+                    <p>Step out in style with our comfortable collection.</p>
+                    <button onclick="openOrderForm('Footwear', '3.jpg')" class="order-button">Order Now</button>
+                </div>
+                <div class="product-card">
+                    <img src="4.jpg" alt="Beauty">
+                    <h3>Beauty Products</h3>
+                    <p>Enhance your natural beauty with our premium range.</p>
+                    <button onclick="openOrderForm('Beauty Products', '4.jpg')" class="order-button">Order Now</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="5.png" alt="Home Decor">
+                    <h3>Home Decor</h3>
+                    <p>Transform your living space with our elegant home decoration items.</p>
+                    <button class="order-button" onclick="openOrderForm('Home Decor', '5.png')">Order Now</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="6.png" alt="Electronics">
+                    <h3>Electronics</h3>
+                    <p>Stay connected with our latest electronic gadgets and accessories.</p>
+                    <button class="order-button" onclick="openOrderForm('Electronics', '6.png')">Order Now</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="7.jpg" alt="Sports">
+                    <h3>Sports & Fitness</h3>
+                    <p>Achieve your fitness goals with our sports equipment and accessories.</p>
+                    <button class="order-button" onclick="openOrderForm('Sports & Fitness', '7.jpg')">Order Now</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="8.jpg" alt="Kids">
+                    <h3>Kids Collection</h3>
+                    <p>Adorable and comfortable clothing for your little ones.</p>
+                    <button class="order-button" onclick="openOrderForm('Kids Collection', '8.jpg')">Order Now</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="11.png" alt="Jewelry">
+                    <h3>Jewelry</h3>
+                    <p>Add sparkle to your style with our exclusive jewelry collection.</p>
+                    <button class="order-button" onclick="openOrderForm('Jewelry', '11.png')">Order Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function openOrderForm(productName, productImage) {
+            window.open(`order-form.html?product=${encodeURIComponent(productName)}&image=${encodeURIComponent(productImage)}`, '_blank');
+        }
+    </script>
+</body>
+</html> 

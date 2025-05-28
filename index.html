@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deem & Store</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">
+          <img src="main.png" alt="Deem & Store Logo" />
+        </div>
+        <div class="menu-toggle">
+          <i class="fas fa-bars"></i>
+        </div>
+        <ul class="nav-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#products">Products</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section id="home" class="hero">
+      <div class="hero-content">
+        <h1>Welcome to Deem & Store</h1>
+        <p>Discover the latest trends in fashion and lifestyle</p>
+      </div>
+    </section>
+
+    <section id="products" class="services">
+      <h2>Our Products</h2>
+      <div class="service-grid">
+        <div class="service-card">
+          <div class="card-content">
+            <img src="1.png" alt="Fashion" />
+            <h3>Fashion Collection</h3>
+            <p>
+              Explore our latest fashion trends and stylish outfits for every
+              occasion.
+            </p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="card-content">
+            <img src="2.png" alt="Accessories" />
+            <h3>Accessories</h3>
+            <p>Complete your look with our premium selection of accessories.</p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="card-content">
+            <img src="3.jpg" alt="Footwear" />
+            <h3>Footwear</h3>
+            <p>
+              Step out in style with our comfortable and trendy footwear
+              collection.
+            </p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="card-content">
+            <img src="4.jpg" alt="Beauty" />
+            <h3>Beauty Products</h3>
+            <p>Enhance your natural beauty with our premium cosmetics range.</p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="card-content">
+            <img src="5.png" alt="Home Decor" />
+            <h3>Home Decor</h3>
+            <p>
+              Transform your living space with our elegant home decoration
+              items.
+            </p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="card-content">
+            <img src="6.png" alt="Electronics" />
+            <h3>Electronics</h3>
+            <p>
+              Stay connected with our latest electronic gadgets and accessories.
+            </p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="card-content">
+            <img src="7.jpg" alt="Sports" />
+            <h3>Sports & Fitness</h3>
+            <p>
+              Achieve your fitness goals with our sports equipment and
+              accessories.
+            </p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="card-content">
+            <img src="8.jpg" alt="Kids" />
+            <h3>Kids Collection</h3>
+            <p>Adorable and comfortable clothing for your little ones.</p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="card-content">
+            <img src="11.png" alt="Jewelry" />
+            <h3>Jewelry</h3>
+            <p>
+              Add sparkle to your style with our exclusive jewelry collection.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="order-section">
+      <div class="order-container">
+        <h2>Shop With Style</h2>
+        <p>Your one-stop destination for fashion and lifestyle</p>
+        <div class="shop-image-container">
+          <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&q=80" class="shop" alt="Fashion Collection">
+        </div>
+        <div class="cta-container">
+          <button onclick="window.open('products.html', '_blank')" class="order-button">
+            Start Shopping
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section contact">
+          <h4>Contact Us</h4>
+          <p>Email: info@deemstore.com</p>
+          <p>Phone: +1 234 567 890</p>
+        </div>
+        <div class="footer-section social">
+          <h4>Follow Us</h4>
+          <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 Deem & Store. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      const slides = document.querySelectorAll(".slide");
+      let currentSlide = 0;
+
+      function nextSlide() {
+        slides[currentSlide].classList.remove("active");
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add("active");
+      }
+
+      setInterval(nextSlide, 5000);
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.nav-links') && !event.target.closest('.menu-toggle')) {
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+    </script>
+  </body>
+</html>
