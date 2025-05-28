@@ -1,60 +1,52 @@
 document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
-    const productName = urlParams.get('product');
-    const productImage = urlParams.get('image');
+    const productName = urlParams.get('productName');
+    const productImage = urlParams.get('productImage');
 
     if (productName && productImage) {
-        document.getElementById('productName').textContent = productName;
-        document.getElementById('productImage').src = productImage;
+        document.getElementById('product-name').textContent = productName;
+        document.getElementById('product-image').src = productImage;
     } else {
-        document.querySelector('.product-preview').innerHTML = `
-            <h2>Place Your Order</h2>
-            <p>Fill out the form below to place your order</p>
-        `;
+        document.getElementById('product-name').textContent = 'Product';
+        document.getElementById('product-image').src = 'default-product.jpg';
     }
 
-    const form = document.getElementById('orderForm');
-    form.addEventListener('submit', async function(e) {
+    const orderForm = document.getElementById('orderForm');
+    orderForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-
-        const submitButton = form.querySelector('button[type="submit"]');
-        const originalButtonText = submitButton.textContent;
+        
+        const submitButton = document.querySelector('button[type="submit"]');
         submitButton.textContent = 'Processing...';
         submitButton.disabled = true;
 
-        const formData = new FormData(form);
-        const orderData = {
-            name: formData.get('name'),
-            email: formData.get('email'),
-            phone: formData.get('phone'),
-            address: formData.get('address'),
-            quantity: formData.get('quantity'),
-            productName: productName || 'General Order',
-            productImage: productImage || ''
+        const formData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            address: document.getElementById('address').value,
+            productName: document.getElementById('product-name').textContent,
+            productImage: document.getElementById('product-image').src
         };
 
         try {
-            const response = await fetch('http://localhost:3000/submit-order', {
+            const response = await fetch('/submit-order', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(orderData)
+                body: JSON.stringify(formData)
             });
-
-            const data = await response.json();
 
             if (response.ok) {
                 alert('Order placed successfully! We will contact you soon.');
                 window.close();
             } else {
-                throw new Error(data.message || 'Failed to submit order');
+                throw new Error('Failed to place order');
             }
         } catch (error) {
-            console.error('Error:', error);
-            alert('Error: ' + (error.message || 'There was an error placing your order. Please try again.'));
+            alert('Error: ' + error.message);
         } finally {
-            submitButton.textContent = originalButtonText;
+            submitButton.textContent = 'Place Order';
             submitButton.disabled = false;
         }
     });

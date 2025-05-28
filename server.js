@@ -1,6 +1,6 @@
 const express = require('express');
-const nodemailer = require('nodemailer');
 const cors = require('cors');
+const nodemailer = require('nodemailer');
 const app = express();
 
 // Middleware
@@ -8,49 +8,67 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static('.')); // Serve static files from current directory
 
-// Create a transporter using Gmail SMTP
+// Create a transporter using Gmail
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // true for 465, false for other ports
+    service: 'gmail',
     auth: {
         user: 'aayushmanthakulla@gmail.com',
-        pass: 'your-app-password' // Replace with your Gmail App Password
-    },
-    tls: {
-        rejectUnauthorized: false
+        pass: 'your-app-specific-password' // You'll need to generate this from Google Account
     }
 });
 
 // Handle order submission
 app.post('/submit-order', async (req, res) => {
-    const { name, email, phone, address, quantity, productName, productImage } = req.body;
-
-    // Email content
-    const mailOptions = {
-        from: 'aayushmanthakulla@gmail.com',
-        to: 'aayushmanthakulla@gmail.com',
-        subject: 'New Order Received',
-        html: `
-            <h2>New Order Details</h2>
-            <p><strong>Product:</strong> ${productName}</p>
-            <p><strong>Customer Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Phone:</strong> ${phone}</p>
-            <p><strong>Delivery Address:</strong> ${address}</p>
-            <p><strong>Quantity:</strong> ${quantity}</p>
-            ${productImage ? `<p><strong>Product Image:</strong> <img src="${productImage}" style="max-width: 200px;"></p>` : ''}
-        `
-    };
-
     try {
-        // Send email
-        await transporter.sendMail(mailOptions);
-        console.log('Email sent successfully');
-        res.status(200).json({ message: 'Order submitted successfully' });
+        const { name, email, phone, address, productName, productImage } = req.body;
+
+        // Email to customer
+        const customerMailOptions = {
+            from: 'aayushmanthakulla@gmail.com',
+            to: email,
+            subject: 'Order Confirmation - Deem & Store',
+            html: `
+                <h2>Thank you for your order!</h2>
+                <p>Dear ${name},</p>
+                <p>We have received your order for ${productName}.</p>
+                <p>Order Details:</p>
+                <ul>
+                    <li>Product: ${productName}</li>
+                    <li>Phone: ${phone}</li>
+                    <li>Address: ${address}</li>
+                </ul>
+                <p>We will process your order shortly and contact you for further details.</p>
+                <p>Best regards,<br>Deem & Store Team</p>
+            `
+        };
+
+        // Email to admin
+        const adminMailOptions = {
+            from: 'aayushmanthakulla@gmail.com',
+            to: 'aayushmanthakulla@gmail.com',
+            subject: 'New Order Received - Deem & Store',
+            html: `
+                <h2>New Order Received</h2>
+                <p>Customer Details:</p>
+                <ul>
+                    <li>Name: ${name}</li>
+                    <li>Email: ${email}</li>
+                    <li>Phone: ${phone}</li>
+                    <li>Address: ${address}</li>
+                    <li>Product: ${productName}</li>
+                </ul>
+                <p>Product Image: <img src="${productImage}" alt="${productName}" style="max-width: 200px;"></p>
+            `
+        };
+
+        // Send emails
+        await transporter.sendMail(customerMailOptions);
+        await transporter.sendMail(adminMailOptions);
+
+        res.status(200).json({ message: 'Order received and emails sent successfully' });
     } catch (error) {
-        console.error('Error sending email:', error);
-        res.status(500).json({ message: 'Error submitting order: ' + error.message });
+        console.error('Error:', error);
+        res.status(500).json({ message: 'Error processing order' });
     }
 });
 
