@@ -29,22 +29,39 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         try {
-            const response = await fetch('/submit-order', {
+            const baseUrl = window.location.origin;
+            const response = await fetch(`${baseUrl}/submit-order`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify(formData)
             });
 
-            if (response.ok) {
-                alert('Order placed successfully! We will contact you soon.');
-                window.close();
-            } else {
-                throw new Error('Failed to place order');
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to place order');
             }
+
+            const result = await response.json();
+            
+            // Show success message
+            const formContainer = document.querySelector('.form-container');
+            formContainer.innerHTML = `
+                <div class="success-message">
+                    <i class="fas fa-check-circle"></i>
+                    <h2>Thank You for Your Order!</h2>
+                    <p>Dear ${formData.name},</p>
+                    <p>Your order for ${formData.productName} has been received.</p>
+                    <p>We have sent a confirmation email to ${formData.email}</p>
+                    <p>We will process your order shortly and contact you for further details.</p>
+                    <button onclick="window.close()" class="close-button">Close Window</button>
+                </div>
+            `;
         } catch (error) {
-            alert('Error: ' + error.message);
+            console.error('Error:', error);
+            alert('Error: ' + (error.message || 'Failed to connect to server. Please try again later.'));
         } finally {
             submitButton.textContent = 'Place Order';
             submitButton.disabled = false;
