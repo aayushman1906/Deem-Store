@@ -36,6 +36,24 @@ transporter.verify(function(error, success) {
     }
 });
 
+// Test email route
+app.get('/test-email', async (req, res) => {
+    try {
+        const testMailOptions = {
+            from: 'aayushmanthakulla@gmail.com',
+            to: 'aayushmanthakulla@gmail.com',
+            subject: 'Test Email - Deem & Store',
+            html: '<h1>This is a test email</h1><p>If you receive this, the email configuration is working correctly.</p>'
+        };
+
+        await transporter.sendMail(testMailOptions);
+        res.json({ message: 'Test email sent successfully' });
+    } catch (error) {
+        console.error('Test email error:', error);
+        res.status(500).json({ message: 'Error sending test email: ' + error.message });
+    }
+});
+
 // Test route
 app.get('/test', (req, res) => {
     res.json({ message: 'Server is running' });
@@ -44,7 +62,7 @@ app.get('/test', (req, res) => {
 // Handle order submission
 app.post('/submit-order', async (req, res) => {
     try {
-        const { name, email, phone, address, productName, productImage } = req.body;
+        const { name, email, phone, address, productName, productImage, quantity } = req.body;
 
         // Validate required fields
         if (!name || !email || !phone || !address || !productName) {
@@ -64,9 +82,13 @@ app.post('/submit-order', async (req, res) => {
                     <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px;">
                         <p style="font-size: 16px; color: #333;">Dear ${name},</p>
                         <p style="font-size: 16px; color: #333;">We have received your order for ${productName}.</p>
+                        <div style="text-align: center; margin: 20px 0;">
+                            <img src="${productImage}" alt="${productName}" style="max-width: 200px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                        </div>
                         <h3 style="color: #2c3e50;">Order Details:</h3>
                         <ul style="list-style: none; padding: 0;">
                             <li style="margin: 10px 0;"><strong>Product:</strong> ${productName}</li>
+                            <li style="margin: 10px 0;"><strong>Quantity:</strong> ${quantity}</li>
                             <li style="margin: 10px 0;"><strong>Phone:</strong> ${phone}</li>
                             <li style="margin: 10px 0;"><strong>Address:</strong> ${address}</li>
                         </ul>
@@ -97,11 +119,11 @@ app.post('/submit-order', async (req, res) => {
                             <li style="margin: 10px 0;"><strong>Phone:</strong> ${phone}</li>
                             <li style="margin: 10px 0;"><strong>Address:</strong> ${address}</li>
                             <li style="margin: 10px 0;"><strong>Product:</strong> ${productName}</li>
+                            <li style="margin: 10px 0;"><strong>Quantity:</strong> ${quantity}</li>
                         </ul>
-                        ${productImage ? `<div style="margin-top: 20px;">
-                            <p><strong>Product Image:</strong></p>
-                            <img src="${productImage}" alt="${productName}" style="max-width: 200px; border-radius: 5px;">
-                        </div>` : ''}
+                        <div style="text-align: center; margin: 20px 0;">
+                            <img src="${productImage}" alt="${productName}" style="max-width: 200px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                        </div>
                     </div>
                 </div>
             `
@@ -111,7 +133,12 @@ app.post('/submit-order', async (req, res) => {
         await transporter.sendMail(customerMailOptions);
         await transporter.sendMail(adminMailOptions);
 
-        res.status(200).json({ message: 'Order received and emails sent successfully' });
+        // Send response with image data
+        res.status(200).json({ 
+            message: 'Order received and emails sent successfully',
+            productImage: productImage,
+            productName: productName
+        });
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ message: 'Error processing order: ' + error.message });

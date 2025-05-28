@@ -4,11 +4,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const productImage = urlParams.get('productImage');
 
     if (productName && productImage) {
-        document.getElementById('product-name').textContent = productName;
-        document.getElementById('product-image').src = productImage;
+        document.getElementById('productName').textContent = productName;
+        const productImageElement = document.getElementById('productImage');
+        const decodedImageUrl = decodeURIComponent(productImage);
+        productImageElement.src = decodedImageUrl;
+        productImageElement.style.display = 'block';
     } else {
-        document.getElementById('product-name').textContent = 'Product';
-        document.getElementById('product-image').src = 'default-product.jpg';
+        document.getElementById('productName').textContent = 'Product';
+        document.getElementById('productImage').style.display = 'none';
+    }
+
+    if (productName) {
+        document.getElementById('hiddenProductName').value = productName;
+    }
+    if (productImage) {
+        document.getElementById('hiddenProductImage').value = productImage;
     }
 
     const orderForm = document.getElementById('orderForm');
@@ -24,8 +34,9 @@ document.addEventListener('DOMContentLoaded', function() {
             email: document.getElementById('email').value,
             phone: document.getElementById('phone').value,
             address: document.getElementById('address').value,
-            productName: document.getElementById('product-name').textContent,
-            productImage: document.getElementById('product-image').src
+            quantity: document.getElementById('quantity').value,
+            productName: document.getElementById('productName').textContent,
+            productImage: document.getElementById('productImage').src
         };
 
         try {
@@ -46,14 +57,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const result = await response.json();
             
-            // Show success message
-            const formContainer = document.querySelector('.form-container');
+            // Show success message with product image
+            const formContainer = document.querySelector('.order-container');
             formContainer.innerHTML = `
                 <div class="success-message">
-                    <i class="fas fa-check-circle"></i>
+                    <div class="success-image">
+                        <img src="${result.productImage}" alt="${result.productName}" style="max-width: 200px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    </div>
                     <h2>Thank You for Your Order!</h2>
                     <p>Dear ${formData.name},</p>
-                    <p>Your order for ${formData.productName} has been received.</p>
+                    <p>Your order for ${result.productName} has been received.</p>
+                    <p>Quantity: ${formData.quantity}</p>
                     <p>We have sent a confirmation email to ${formData.email}</p>
                     <p>We will process your order shortly and contact you for further details.</p>
                     <button onclick="window.close()" class="close-button">Close Window</button>
