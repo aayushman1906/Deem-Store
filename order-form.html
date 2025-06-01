@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Form - Deemand</title>
+    <title>Order Form - Deem & Store</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Add EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("YOUR_PUBLIC_KEY"); // Add your EmailJS public key here
+        })();
+    </script>
     <style>
         .order-form-container {
             max-width: 800px;
@@ -117,11 +124,33 @@
         .success-message {
             display: none;
             text-align: center;
-            color: #27ae60;
-            margin-top: 1rem;
-            padding: 1rem;
+            padding: 2rem;
             background: #eafaf1;
-            border-radius: 8px;
+            border-radius: 10px;
+            margin-top: 1rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .success-message i {
+            font-size: 4rem;
+            color: #2ecc71;
+            margin-bottom: 1rem;
+        }
+
+        .success-message h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .success-message p {
+            color: #666;
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 767px) {
@@ -184,10 +213,18 @@
             </div>
 
             <button type="submit" class="submit-button">Place Order</button>
-            <div class="success-message" id="successMessage">
-                Thank you for your order! We'll contact you shortly.
-            </div>
         </form>
+
+        <div class="success-message" id="successMessage" style="display: none;">
+            <i class="fas fa-check-circle"></i>
+            <h2>Thank You for Your Order!</h2>
+            <p>Dear <span id="customerName"></span>,</p>
+            <p>Your order for <span id="orderedProduct"></span> has been received.</p>
+            <p>We have sent a confirmation email to <span id="customerEmail"></span></p>
+            <p>We will process your order shortly and contact you for further details.</p>
+            <p>Order Reference: <span id="orderReference"></span></p>
+            <button onclick="window.close()" class="close-button">Close Window</button>
+        </div>
     </div>
 
     <script>
@@ -211,31 +248,72 @@
             `;
         }
 
-        function handleSubmit(event) {
+        function generateOrderReference() {
+            const timestamp = new Date().getTime();
+            const random = Math.floor(Math.random() * 1000);
+            return `ORD-${timestamp}-${random}`;
+        }
+
+        async function handleSubmit(event) {
             event.preventDefault();
+            
+            const submitButton = event.target.querySelector('.submit-button');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Processing...';
             
             // Get form data
             const formData = new FormData(event.target);
             const orderData = Object.fromEntries(formData.entries());
             
-            // Add product details to order data
+            // Add product details and order reference
             orderData.productName = productName;
             orderData.productPrice = productPrice;
+            orderData.productImage = productImage;
+            orderData.orderReference = generateOrderReference();
             
-            // Here you would typically send the data to your server
-            console.log('Order Data:', orderData);
-            
-            // Show success message
-            const successMessage = document.getElementById('successMessage');
-            successMessage.style.display = 'block';
-            
-            // Reset form
-            event.target.reset();
-            
-            // Hide success message after 5 seconds
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-            }, 5000);
+            try {
+                // Send email using EmailJS
+                await emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+                    to_email: orderData.email,
+                    to_name: orderData.name,
+                    order_reference: orderData.orderReference,
+                    product_name: orderData.productName,
+                    product_price: orderData.productPrice,
+                    quantity: orderData.quantity,
+                    delivery_address: orderData.address,
+                    phone: orderData.phone,
+                    message: orderData.message || 'No additional notes'
+                });
+
+                // Send admin notification
+                await emailjs.send("YOUR_SERVICE_ID", "YOUR_ADMIN_TEMPLATE_ID", {
+                    to_email: "aayushmanthakulla@gmail.com",
+                    customer_name: orderData.name,
+                    customer_email: orderData.email,
+                    customer_phone: orderData.phone,
+                    order_reference: orderData.orderReference,
+                    product_name: orderData.productName,
+                    product_price: orderData.productPrice,
+                    quantity: orderData.quantity,
+                    delivery_address: orderData.address,
+                    message: orderData.message || 'No additional notes'
+                });
+
+                // Show success message
+                document.getElementById('orderForm').style.display = 'none';
+                const successMessage = document.getElementById('successMessage');
+                document.getElementById('customerName').textContent = orderData.name;
+                document.getElementById('orderedProduct').textContent = orderData.productName;
+                document.getElementById('customerEmail').textContent = orderData.email;
+                document.getElementById('orderReference').textContent = orderData.orderReference;
+                successMessage.style.display = 'block';
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('There was an error processing your order. Please try again.');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Place Order';
+            }
         }
     </script>
 </body>
