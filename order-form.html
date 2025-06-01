@@ -6,6 +6,13 @@
     <title>Order Form - Deem & Store</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Add EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("public_key_here"); // We'll add your public key here
+        })();
+    </script>
     <style>
         .order-form-container {
             max-width: 800px;
@@ -203,6 +210,92 @@
             margin-top: 1rem;
             color: #d97706;
         }
+
+        .loading {
+            position: relative;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin: -10px 0 0 -10px;
+            border: 2px solid #ffffff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: button-loading-spinner 1s linear infinite;
+        }
+
+        @keyframes button-loading-spinner {
+            from { transform: rotate(0turn); }
+            to { transform: rotate(1turn); }
+        }
+
+        .preview-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .preview-section h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .preview-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .preview-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .preview-item strong {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .preview-item span {
+            color: #666;
+        }
+
+        .redirect-button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        .redirect-button:hover {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .redirect-button i {
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
@@ -211,63 +304,42 @@
             <!-- Product details will be inserted here -->
         </div>
 
-        <div class="activation-notice" id="activationNotice">
-            <p><strong>Important:</strong> This is your first submission. Please check your email (aayushmanthakulla@gmail.com) for an activation link from FormSubmit. Click the link to start receiving orders.</p>
-        </div>
-
         <div class="error-message" id="errorMessage"></div>
 
-        <form class="order-form" id="orderForm" action="https://formsubmit.co/el/activate/aayushmanthakulla@gmail.com" method="POST">
-            <!-- FormSubmit Configuration -->
-            <input type="hidden" name="_subject" value="New Order from Deem & Store">
-            <input type="hidden" name="_template" value="box">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_autoresponse" value="Thank you for your order at Deem & Store! We have received your order and will process it shortly. Your order reference is: {{Order Reference}}. We will contact you soon with further details.">
-            
-            <!-- Prevent spam -->
-            <input type="hidden" name="_honey" value="">
-            <input type="hidden" name="_gotcha" style="display:none">
-            
-            <!-- Product Information -->
-            <input type="hidden" name="Product Name" id="productNameField">
-            <input type="hidden" name="Product Price" id="productPriceField">
-            <input type="hidden" name="Product Image" id="productImageField">
-            <input type="hidden" name="Order Reference" id="orderReferenceField">
-            <input type="hidden" name="Order Date" id="orderDateField">
-            
+        <form class="order-form" id="orderForm" onsubmit="handleSubmit(event)">
             <h2>Place Your Order</h2>
             
             <div class="form-group">
                 <label for="name">Full Name *</label>
-                <input type="text" id="name" name="Customer Name" required placeholder="Enter your full name">
+                <input type="text" id="name" name="name" required placeholder="Enter your full name">
             </div>
 
             <div class="form-group">
                 <label for="email">Email Address *</label>
-                <input type="email" id="email" name="Customer Email" required placeholder="Enter your email address">
+                <input type="email" id="email" name="email" required placeholder="Enter your email address">
             </div>
 
             <div class="form-group">
                 <label for="phone">Phone Number *</label>
-                <input type="tel" id="phone" name="Phone Number" required placeholder="Enter your phone number">
+                <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
             </div>
 
             <div class="form-group">
                 <label for="address">Delivery Address *</label>
-                <textarea id="address" name="Delivery Address" required placeholder="Enter your complete delivery address"></textarea>
+                <textarea id="address" name="address" required placeholder="Enter your complete delivery address"></textarea>
             </div>
 
             <div class="form-group">
                 <label for="quantity">Quantity *</label>
-                <input type="number" id="quantity" name="Quantity" min="1" value="1" required>
+                <input type="number" id="quantity" name="quantity" min="1" value="1" required>
             </div>
 
             <div class="form-group">
                 <label for="message">Additional Notes (Optional)</label>
-                <textarea id="message" name="Additional Notes" placeholder="Any special instructions or notes for your order"></textarea>
+                <textarea id="message" name="message" placeholder="Any special instructions or notes for your order"></textarea>
             </div>
 
-            <button type="submit" class="submit-button">Place Order</button>
+            <button type="submit" class="submit-button" id="submitButton">Place Order</button>
         </form>
 
         <div class="success-message" id="successMessage" style="display: none;">
@@ -303,85 +375,85 @@
             `;
         }
 
-        // Set hidden fields with product information
-        document.getElementById('productNameField').value = productName || '';
-        document.getElementById('productPriceField').value = productPrice || '';
-        document.getElementById('productImageField').value = productImage || '';
-        document.getElementById('orderReferenceField').value = generateOrderReference();
-
-        // Set order date when page loads
-        document.getElementById('orderDateField').value = new Date().toLocaleString();
-
         function generateOrderReference() {
             const timestamp = new Date().getTime();
             const random = Math.floor(Math.random() * 1000);
             return `ORD-${timestamp}-${random}`;
         }
 
-        // Handle form submission
-        document.getElementById('orderForm').addEventListener('submit', async function(event) {
+        async function handleSubmit(event) {
             event.preventDefault();
             
-            const submitButton = event.target.querySelector('.submit-button');
+            const submitButton = document.getElementById('submitButton');
             const errorMessage = document.getElementById('errorMessage');
-            const activationNotice = document.getElementById('activationNotice');
             
+            // Show loading state
+            submitButton.classList.add('loading');
             submitButton.disabled = true;
-            submitButton.textContent = 'Processing...';
             errorMessage.style.display = 'none';
-            activationNotice.style.display = 'none';
 
             try {
-                // Store form data for success message
+                // Get form data
                 const formData = new FormData(event.target);
                 const orderData = Object.fromEntries(formData.entries());
+                const orderReference = generateOrderReference();
 
-                // Log the form data for debugging
-                console.log('Submitting order data:', orderData);
+                // Prepare email template parameters
+                const templateParams = {
+                    to_email: 'aayushmanthakulla@gmail.com',
+                    to_name: 'Deem & Store Admin',
+                    from_name: orderData.name,
+                    from_email: orderData.email,
+                    phone: orderData.phone,
+                    address: orderData.address,
+                    quantity: orderData.quantity,
+                    message: orderData.message || 'No additional notes',
+                    product_name: productName,
+                    product_price: productPrice,
+                    product_image: productImage,
+                    order_reference: orderReference,
+                    order_date: new Date().toLocaleString()
+                };
 
-                // Submit the form
-                const response = await fetch(event.target.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Accept': 'application/json'
+                // Send email to admin
+                await emailjs.send(
+                    'service_id_here', // We'll add your service ID
+                    'template_id_here', // We'll add your template ID
+                    templateParams
+                );
+
+                // Send confirmation email to customer
+                await emailjs.send(
+                    'service_id_here', // Same service ID
+                    'customer_template_id_here', // We'll add your customer template ID
+                    {
+                        to_email: orderData.email,
+                        to_name: orderData.name,
+                        order_reference: orderReference,
+                        product_name: productName,
+                        product_price: productPrice
                     }
-                });
+                );
 
-                const result = await response.text();
-                console.log('Form submission response:', result);
+                // Show success message
+                document.getElementById('orderForm').style.display = 'none';
+                const successMessage = document.getElementById('successMessage');
+                document.getElementById('customerName').textContent = orderData.name;
+                document.getElementById('orderedProduct').textContent = productName;
+                document.getElementById('customerEmail').textContent = orderData.email;
+                document.getElementById('orderReference').textContent = orderReference;
+                successMessage.style.display = 'block';
 
-                if (response.ok) {
-                    // Check if this is the first submission (activation email)
-                    if (result.includes('Activate your email')) {
-                        activationNotice.style.display = 'block';
-                        submitButton.disabled = false;
-                        submitButton.textContent = 'Place Order';
-                        return;
-                    }
-
-                    // Show success message
-                    document.getElementById('orderForm').style.display = 'none';
-                    const successMessage = document.getElementById('successMessage');
-                    document.getElementById('customerName').textContent = orderData['Customer Name'];
-                    document.getElementById('orderedProduct').textContent = productName;
-                    document.getElementById('customerEmail').textContent = orderData['Customer Email'];
-                    document.getElementById('orderReference').textContent = document.getElementById('orderReferenceField').value;
-                    successMessage.style.display = 'block';
-
-                    // Log successful submission
-                    console.log('Order submitted successfully');
-                } else {
-                    throw new Error('Form submission failed: ' + result);
-                }
             } catch (error) {
-                console.error('Error submitting form:', error);
+                console.error('Error:', error);
                 errorMessage.textContent = 'There was an error processing your order. Please try again or contact us directly at aayushmanthakulla@gmail.com';
                 errorMessage.style.display = 'block';
+            } finally {
+                // Reset button state
+                submitButton.classList.remove('loading');
                 submitButton.disabled = false;
-                submitButton.textContent = 'Place Order';
             }
-        });
+        }
     </script>
 </body>
 </html> 
