@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Footwear Collection - Deemand</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="category.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="main.png" alt="Deem & Store Logo">
+                    <span class="logo-text">Deem & Store</span>
+                </a>
+            </div>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Add overlay div -->
+    <div class="nav-overlay"></div>
+
+    <section class="category-hero">
+        <h1>Footwear Collection</h1>
+        <p>Step into style with our exclusive collection of footwear. From casual to formal, find the perfect pair for every occasion.</p>
+    </section>
+
+    <section class="products-grid">
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80" alt="Classic Sneakers">
+            <div class="product-info">
+                <h3>Classic Sneakers</h3>
+                <p>Comfortable and stylish sneakers perfect for everyday wear. Available in multiple colors.</p>
+                <span class="price">रू 1,999</span>
+                <button class="order-button" onclick="openOrderForm('Classic Sneakers', 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80', 'रू 1,999', 'Comfortable and stylish sneakers perfect for everyday wear. Available in multiple colors.')">Order Now</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80" alt="Formal Leather Shoes">
+            <div class="product-info">
+                <h3>Formal Leather Shoes</h3>
+                <p>Premium leather shoes for a sophisticated look. Perfect for formal occasions and office wear.</p>
+                <span class="price">रू 2,499</span>
+                <button class="order-button" onclick="openOrderForm('Formal Leather Shoes', 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80', 'रू 2,499', 'Premium leather shoes for a sophisticated look. Perfect for formal occasions and office wear.')">Order Now</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80" alt="Sports Running Shoes">
+            <div class="product-info">
+                <h3>Sports Running Shoes</h3>
+                <p>Lightweight and breathable running shoes with advanced cushioning technology.</p>
+                <span class="price">रू 2,999</span>
+                <button class="order-button" onclick="openOrderForm('Sports Running Shoes', 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80', 'रू 2,999', 'Lightweight and breathable running shoes with advanced cushioning technology.')">Order Now</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80" alt="Casual Slip-ons">
+            <div class="product-info">
+                <h3>Casual Slip-ons</h3>
+                <p>Easy-to-wear slip-on shoes for a relaxed and comfortable style. Perfect for casual outings.</p>
+                <span class="price">रू 1,799</span>
+                <button class="order-button" onclick="openOrderForm('Casual Slip-ons', 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80', 'रू 1,799', 'Easy-to-wear slip-on shoes for a relaxed and comfortable style. Perfect for casual outings.')">Order Now</button>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-section contact">
+                <h4>Contact Us</h4>
+                <p>Email: info@deemand.com</p>
+                <p>Phone: +977- 9767313071</p>
+            </div>
+            <div class="footer-section social">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Deemand. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function openOrderForm(name, image, price, description) {
+            const params = new URLSearchParams({
+                name: name,
+                image: image,
+                price: price,
+                description: description
+            });
+            window.open(`order-form.html?${params.toString()}`, '_blank');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            const overlay = document.querySelector('.nav-overlay');
+            
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+
+            // Close menu when clicking overlay
+            overlay.addEventListener('click', function() {
+                navLinks.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.nav-links') && !event.target.closest('.menu-toggle')) {
+                    navLinks.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

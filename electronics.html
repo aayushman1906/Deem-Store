@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electronic Gadgets - Deem & Store</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="category.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="main.png" alt="Deem & Store Logo">
+                    <span class="logo-text">Deem & Store</span>
+                </a>
+            </div>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Add overlay div -->
+    <div class="nav-overlay"></div>
+
+    <section class="category-hero">
+        <h1>Electronic Gadgets</h1>
+        <p>Discover our latest collection of cutting-edge electronic gadgets</p>
+    </section>
+
+    <section class="products-grid">
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=800&q=80" alt="Wireless Earbuds">
+            <div class="product-info">
+                <h3>Premium Wireless Earbuds</h3>
+                <p>High-quality sound with noise cancellation</p>
+                <span class="price">रू 12,999</span>
+                <button class="order-button" onclick="openOrderForm('Premium Wireless Earbuds', 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=800&q=80', 'रू 12,999', 'High-quality sound with noise cancellation')">Order Now</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=800&q=80" alt="Smart Watch">
+            <div class="product-info">
+                <h3>Smart Watch Series 5</h3>
+                <p>Track your fitness and stay connected</p>
+                <span class="price">रू 24,999</span>
+                <button class="order-button" onclick="openOrderForm('Smart Watch Series 5', 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=800&q=80', 'रू 24,999', 'Track your fitness and stay connected')">Order Now</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=800&q=80" alt="Wireless Charger">
+            <div class="product-info">
+                <h3>Fast Wireless Charger</h3>
+                <p>Quick charging for all devices</p>
+                <span class="price">रू 6,499</span>
+                <button class="order-button" onclick="openOrderForm('Fast Wireless Charger', 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=800&q=80', 'रू 6,499', 'Quick charging for all devices')">Order Now</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=800&q=80" alt="Bluetooth Speaker">
+            <div class="product-info">
+                <h3>Portable Bluetooth Speaker</h3>
+                <p>Powerful sound in a compact design</p>
+                <span class="price">रू 9,999</span>
+                <button class="order-button" onclick="openOrderForm('Portable Bluetooth Speaker', 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=800&q=80', 'रू 9,999', 'Powerful sound in a compact design')">Order Now</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section contact">
+                <h4>Contact Us</h4>
+                <p>Email: info@deemstore.com</p>
+                <p>Phone: +977- 9767313071</p>
+            </div>
+            <div class="footer-section social">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Deem & Store. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function openOrderForm(name, image, price, description) {
+            const params = new URLSearchParams({
+                name: name,
+                image: image,
+                price: price,
+                description: description
+            });
+            window.open(`order-form.html?${params.toString()}`, '_blank');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            const overlay = document.querySelector('.nav-overlay');
+            
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+
+            // Close menu when clicking overlay
+            overlay.addEventListener('click', function() {
+                navLinks.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.nav-links') && !event.target.closest('.menu-toggle')) {
+                    navLinks.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -3,54 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Form - Deem & Store</title>
-    <link rel="stylesheet" href="order-form.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Order Form - Deemand</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .order-form-container {
+            max-width: 800px;
+            margin: 100px auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-summary {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .product-image {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-details {
+            flex: 1;
+        }
+
+        .product-details h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-details p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .product-price {
+            font-size: 1.4rem;
+            color: #e74c3c;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .order-form h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background: linear-gradient(45deg, #2980b9, #3498db);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            color: #27ae60;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #eafaf1;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 767px) {
+            .order-form-container {
+                margin: 80px 1rem;
+                padding: 1.5rem;
+            }
+
+            .order-summary {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .product-image {
+                width: 100%;
+                max-width: 300px;
+                height: auto;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="order-container">
-        <div class="order-content">
-            <div class="product-preview">
-                <img id="productImage" src="" alt="Product Image" style="display: none;">
-                <h2 id="productName"></h2>
-            </div>
-            
-            <form action="https://formsubmit.co/aayushmanthakulla@gmail.com" method="POST" class="order-form">
-                <h1>Order Details</h1>
-                
-                <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="address">Delivery Address</label>
-                    <textarea id="address" name="address" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="quantity">Quantity</label>
-                    <input type="number" id="quantity" name="quantity" min="1" value="1" required>
-                </div>
-
-                <!-- Hidden fields for product info -->
-                <input type="hidden" name="product" id="hiddenProductName">
-                <input type="hidden" name="productImage" id="hiddenProductImage">
-                <input type="hidden" name="_next" value="thanks.html">
-                <button type="submit" class="submit-button">Confirm Order</button>
-            </form>
+    <div class="order-form-container">
+        <div class="order-summary" id="orderSummary">
+            <!-- Product details will be inserted here -->
         </div>
+
+        <form class="order-form" id="orderForm" onsubmit="handleSubmit(event)">
+            <h2>Place Your Order</h2>
+            
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Delivery Address</label>
+                <textarea id="address" name="address" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">Quantity</label>
+                <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Additional Notes (Optional)</label>
+                <textarea id="message" name="message"></textarea>
+            </div>
+
+            <button type="submit" class="submit-button">Place Order</button>
+            <div class="success-message" id="successMessage">
+                Thank you for your order! We'll contact you shortly.
+            </div>
+        </form>
     </div>
-    <script src="order-form.js"></script>
+
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const productName = urlParams.get('name');
+        const productImage = urlParams.get('image');
+        const productPrice = urlParams.get('price');
+        const productDescription = urlParams.get('description');
+
+        // Update order summary
+        const orderSummary = document.getElementById('orderSummary');
+        if (productName && productImage) {
+            orderSummary.innerHTML = `
+                <img src="${productImage}" alt="${productName}" class="product-image">
+                <div class="product-details">
+                    <h3>${productName}</h3>
+                    <p>${productDescription || ''}</p>
+                    <div class="product-price">${productPrice || ''}</div>
+                </div>
+            `;
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(event.target);
+            const orderData = Object.fromEntries(formData.entries());
+            
+            // Add product details to order data
+            orderData.productName = productName;
+            orderData.productPrice = productPrice;
+            
+            // Here you would typically send the data to your server
+            console.log('Order Data:', orderData);
+            
+            // Show success message
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            
+            // Reset form
+            event.target.reset();
+            
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 5000);
+        }
+    </script>
 </body>
 </html> 
