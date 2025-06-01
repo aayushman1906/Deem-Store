@@ -217,50 +217,54 @@
 
         <div class="error-message" id="errorMessage"></div>
 
-        <form class="order-form" id="orderForm" action="https://formsubmit.co/aayushmanthakulla@gmail.com" method="POST">
+        <form class="order-form" id="orderForm" action="https://formsubmit.co/el/activate/aayushmanthakulla@gmail.com" method="POST">
             <!-- FormSubmit Configuration -->
             <input type="hidden" name="_subject" value="New Order from Deem & Store">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_autoresponse" value="Thank you for your order! We have received your order and will process it shortly. Your order reference is: {{Order Reference}}">
+            <input type="hidden" name="_template" value="box">
             <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_next" value="https://deemand.com/thank-you.html">
+            <input type="hidden" name="_autoresponse" value="Thank you for your order at Deem & Store! We have received your order and will process it shortly. Your order reference is: {{Order Reference}}. We will contact you soon with further details.">
+            
+            <!-- Prevent spam -->
+            <input type="hidden" name="_honey" value="">
+            <input type="hidden" name="_gotcha" style="display:none">
             
             <!-- Product Information -->
             <input type="hidden" name="Product Name" id="productNameField">
             <input type="hidden" name="Product Price" id="productPriceField">
             <input type="hidden" name="Product Image" id="productImageField">
             <input type="hidden" name="Order Reference" id="orderReferenceField">
+            <input type="hidden" name="Order Date" id="orderDateField">
             
             <h2>Place Your Order</h2>
             
             <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="Customer Name" required>
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" name="Customer Name" required placeholder="Enter your full name">
             </div>
 
             <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="Customer Email" required>
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="Customer Email" required placeholder="Enter your email address">
             </div>
 
             <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" name="Phone Number" required>
+                <label for="phone">Phone Number *</label>
+                <input type="tel" id="phone" name="Phone Number" required placeholder="Enter your phone number">
             </div>
 
             <div class="form-group">
-                <label for="address">Delivery Address</label>
-                <textarea id="address" name="Delivery Address" required></textarea>
+                <label for="address">Delivery Address *</label>
+                <textarea id="address" name="Delivery Address" required placeholder="Enter your complete delivery address"></textarea>
             </div>
 
             <div class="form-group">
-                <label for="quantity">Quantity</label>
+                <label for="quantity">Quantity *</label>
                 <input type="number" id="quantity" name="Quantity" min="1" value="1" required>
             </div>
 
             <div class="form-group">
                 <label for="message">Additional Notes (Optional)</label>
-                <textarea id="message" name="Additional Notes"></textarea>
+                <textarea id="message" name="Additional Notes" placeholder="Any special instructions or notes for your order"></textarea>
             </div>
 
             <button type="submit" class="submit-button">Place Order</button>
@@ -305,6 +309,9 @@
         document.getElementById('productImageField').value = productImage || '';
         document.getElementById('orderReferenceField').value = generateOrderReference();
 
+        // Set order date when page loads
+        document.getElementById('orderDateField').value = new Date().toLocaleString();
+
         function generateOrderReference() {
             const timestamp = new Date().getTime();
             const random = Math.floor(Math.random() * 1000);
@@ -329,16 +336,24 @@
                 const formData = new FormData(event.target);
                 const orderData = Object.fromEntries(formData.entries());
 
+                // Log the form data for debugging
+                console.log('Submitting order data:', orderData);
+
                 // Submit the form
                 const response = await fetch(event.target.action, {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
                 });
+
+                const result = await response.text();
+                console.log('Form submission response:', result);
 
                 if (response.ok) {
                     // Check if this is the first submission (activation email)
-                    const text = await response.text();
-                    if (text.includes('Activate your email')) {
+                    if (result.includes('Activate your email')) {
                         activationNotice.style.display = 'block';
                         submitButton.disabled = false;
                         submitButton.textContent = 'Place Order';
@@ -353,12 +368,15 @@
                     document.getElementById('customerEmail').textContent = orderData['Customer Email'];
                     document.getElementById('orderReference').textContent = document.getElementById('orderReferenceField').value;
                     successMessage.style.display = 'block';
+
+                    // Log successful submission
+                    console.log('Order submitted successfully');
                 } else {
-                    throw new Error('Form submission failed');
+                    throw new Error('Form submission failed: ' + result);
                 }
             } catch (error) {
-                console.error('Error:', error);
-                errorMessage.textContent = 'There was an error processing your order. Please try again or contact us directly.';
+                console.error('Error submitting form:', error);
+                errorMessage.textContent = 'There was an error processing your order. Please try again or contact us directly at aayushmanthakulla@gmail.com';
                 errorMessage.style.display = 'block';
                 submitButton.disabled = false;
                 submitButton.textContent = 'Place Order';
