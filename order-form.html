@@ -6,13 +6,7 @@
     <title>Order Form - Deem & Store</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Add EmailJS SDK -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function() {
-            emailjs.init("public_key_here"); // We'll add your public key here
-        })();
-    </script>
+    <!-- Remove EmailJS SDK -->
     <style>
         .order-form-container {
             max-width: 800px;
@@ -306,7 +300,19 @@
 
         <div class="error-message" id="errorMessage"></div>
 
-        <form class="order-form" id="orderForm" onsubmit="handleSubmit(event)">
+        <form class="order-form" id="orderForm" action="https://formsubmit.co/aayushmanthakulla@gmail.com" method="POST">
+            <!-- FormSubmit Configuration -->
+            <input type="hidden" name="_subject" value="New Order from Deem & Store">
+            <input type="hidden" name="_template" value="box">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_autoresponse" value="Thank you for your order! We have received your order and will process it shortly. We will contact you for further details.">
+            
+            <!-- Product Information -->
+            <input type="hidden" name="Product Name" id="productNameField">
+            <input type="hidden" name="Product Price" id="productPriceField">
+            <input type="hidden" name="Product Image" id="productImageField">
+            <input type="hidden" name="Order Reference" id="orderReferenceField">
+            
             <h2>Place Your Order</h2>
             
             <div class="form-group">
@@ -362,7 +368,7 @@
         const productPrice = urlParams.get('price');
         const productDescription = urlParams.get('description');
 
-        // Update order summary
+        // Update order summary and hidden fields
         const orderSummary = document.getElementById('orderSummary');
         if (productName && productImage) {
             orderSummary.innerHTML = `
@@ -373,6 +379,11 @@
                     <div class="product-price">${productPrice || ''}</div>
                 </div>
             `;
+
+            // Set hidden field values
+            document.getElementById('productNameField').value = productName;
+            document.getElementById('productPriceField').value = productPrice;
+            document.getElementById('productImageField').value = productImage;
         }
 
         function generateOrderReference() {
@@ -381,79 +392,30 @@
             return `ORD-${timestamp}-${random}`;
         }
 
-        async function handleSubmit(event) {
-            event.preventDefault();
-            
+        // Set order reference when form loads
+        document.getElementById('orderReferenceField').value = generateOrderReference();
+
+        // Handle form submission
+        document.getElementById('orderForm').addEventListener('submit', function(event) {
             const submitButton = document.getElementById('submitButton');
-            const errorMessage = document.getElementById('errorMessage');
-            
-            // Show loading state
             submitButton.classList.add('loading');
             submitButton.disabled = true;
-            errorMessage.style.display = 'none';
 
-            try {
-                // Get form data
-                const formData = new FormData(event.target);
-                const orderData = Object.fromEntries(formData.entries());
-                const orderReference = generateOrderReference();
+            // Store form data for success message
+            const formData = new FormData(this);
+            const orderData = Object.fromEntries(formData.entries());
 
-                // Prepare email template parameters
-                const templateParams = {
-                    to_email: 'aayushmanthakulla@gmail.com',
-                    to_name: 'Deem & Store Admin',
-                    from_name: orderData.name,
-                    from_email: orderData.email,
-                    phone: orderData.phone,
-                    address: orderData.address,
-                    quantity: orderData.quantity,
-                    message: orderData.message || 'No additional notes',
-                    product_name: productName,
-                    product_price: productPrice,
-                    product_image: productImage,
-                    order_reference: orderReference,
-                    order_date: new Date().toLocaleString()
-                };
-
-                // Send email to admin
-                await emailjs.send(
-                    'service_id_here', // We'll add your service ID
-                    'template_id_here', // We'll add your template ID
-                    templateParams
-                );
-
-                // Send confirmation email to customer
-                await emailjs.send(
-                    'service_id_here', // Same service ID
-                    'customer_template_id_here', // We'll add your customer template ID
-                    {
-                        to_email: orderData.email,
-                        to_name: orderData.name,
-                        order_reference: orderReference,
-                        product_name: productName,
-                        product_price: productPrice
-                    }
-                );
-
-                // Show success message
+            // Show success message after a short delay
+            setTimeout(() => {
                 document.getElementById('orderForm').style.display = 'none';
                 const successMessage = document.getElementById('successMessage');
                 document.getElementById('customerName').textContent = orderData.name;
                 document.getElementById('orderedProduct').textContent = productName;
                 document.getElementById('customerEmail').textContent = orderData.email;
-                document.getElementById('orderReference').textContent = orderReference;
+                document.getElementById('orderReference').textContent = document.getElementById('orderReferenceField').value;
                 successMessage.style.display = 'block';
-
-            } catch (error) {
-                console.error('Error:', error);
-                errorMessage.textContent = 'There was an error processing your order. Please try again or contact us directly at aayushmanthakulla@gmail.com';
-                errorMessage.style.display = 'block';
-            } finally {
-                // Reset button state
-                submitButton.classList.remove('loading');
-                submitButton.disabled = false;
-            }
-        }
+            }, 1000);
+        });
     </script>
 </body>
 </html> 
