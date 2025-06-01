@@ -181,6 +181,28 @@
                 height: auto;
             }
         }
+
+        .error-message {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            background: #fee2e2;
+            border: 1px solid #ef4444;
+            border-radius: 8px;
+            margin-top: 1rem;
+            color: #dc2626;
+        }
+
+        .activation-notice {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            margin-top: 1rem;
+            color: #d97706;
+        }
     </style>
 </head>
 <body>
@@ -189,12 +211,19 @@
             <!-- Product details will be inserted here -->
         </div>
 
+        <div class="activation-notice" id="activationNotice">
+            <p><strong>Important:</strong> This is your first submission. Please check your email (aayushmanthakulla@gmail.com) for an activation link from FormSubmit. Click the link to start receiving orders.</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
         <form class="order-form" id="orderForm" action="https://formsubmit.co/aayushmanthakulla@gmail.com" method="POST">
             <!-- FormSubmit Configuration -->
             <input type="hidden" name="_subject" value="New Order from Deem & Store">
             <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_next" value="https://deemand.com/thank-you.html">
+            <input type="hidden" name="_autoresponse" value="Thank you for your order! We have received your order and will process it shortly. Your order reference is: {{Order Reference}}">
             <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_next" value="https://deemand.com/thank-you.html">
             
             <!-- Product Information -->
             <input type="hidden" name="Product Name" id="productNameField">
@@ -283,25 +312,57 @@
         }
 
         // Handle form submission
-        document.getElementById('orderForm').addEventListener('submit', function(event) {
+        document.getElementById('orderForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
             const submitButton = event.target.querySelector('.submit-button');
+            const errorMessage = document.getElementById('errorMessage');
+            const activationNotice = document.getElementById('activationNotice');
+            
             submitButton.disabled = true;
             submitButton.textContent = 'Processing...';
+            errorMessage.style.display = 'none';
+            activationNotice.style.display = 'none';
 
-            // Store form data for success message
-            const formData = new FormData(event.target);
-            const orderData = Object.fromEntries(formData.entries());
+            try {
+                // Store form data for success message
+                const formData = new FormData(event.target);
+                const orderData = Object.fromEntries(formData.entries());
 
-            // Show success message after a short delay
-            setTimeout(() => {
-                document.getElementById('orderForm').style.display = 'none';
-                const successMessage = document.getElementById('successMessage');
-                document.getElementById('customerName').textContent = orderData['Customer Name'];
-                document.getElementById('orderedProduct').textContent = productName;
-                document.getElementById('customerEmail').textContent = orderData['Customer Email'];
-                document.getElementById('orderReference').textContent = document.getElementById('orderReferenceField').value;
-                successMessage.style.display = 'block';
-            }, 1000);
+                // Submit the form
+                const response = await fetch(event.target.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    // Check if this is the first submission (activation email)
+                    const text = await response.text();
+                    if (text.includes('Activate your email')) {
+                        activationNotice.style.display = 'block';
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Place Order';
+                        return;
+                    }
+
+                    // Show success message
+                    document.getElementById('orderForm').style.display = 'none';
+                    const successMessage = document.getElementById('successMessage');
+                    document.getElementById('customerName').textContent = orderData['Customer Name'];
+                    document.getElementById('orderedProduct').textContent = productName;
+                    document.getElementById('customerEmail').textContent = orderData['Customer Email'];
+                    document.getElementById('orderReference').textContent = document.getElementById('orderReferenceField').value;
+                    successMessage.style.display = 'block';
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessage.textContent = 'There was an error processing your order. Please try again or contact us directly.';
+                errorMessage.style.display = 'block';
+                submitButton.disabled = false;
+                submitButton.textContent = 'Place Order';
+            }
         });
     </script>
 </body>
