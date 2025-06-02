@@ -4,445 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Form - Deem & Store</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Remove EmailJS SDK -->
-    <style>
-        .order-form-container {
-            max-width: 800px;
-            margin: 100px auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .order-summary {
-            display: flex;
-            gap: 2rem;
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-
-        .product-image {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .product-details {
-            flex: 1;
-        }
-
-        .product-details h3 {
-            font-size: 1.5rem;
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
-
-        .product-details p {
-            color: #666;
-            margin-bottom: 1rem;
-        }
-
-        .product-price {
-            font-size: 1.4rem;
-            color: #e74c3c;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .order-form h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 2rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #555;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #3498db;
-        }
-
-        .form-group textarea {
-            height: 100px;
-            resize: vertical;
-        }
-
-        .submit-button {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(45deg, #3498db, #2980b9);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .submit-button:hover {
-            background: linear-gradient(45deg, #2980b9, #3498db);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
-        }
-
-        .success-message {
-            display: none;
-            text-align: center;
-            padding: 2rem;
-            background: #eafaf1;
-            border-radius: 10px;
-            margin-top: 1rem;
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .success-message i {
-            font-size: 4rem;
-            color: #2ecc71;
-            margin-bottom: 1rem;
-        }
-
-        .success-message h2 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-        }
-
-        .success-message p {
-            color: #666;
-            margin-bottom: 0.5rem;
-            line-height: 1.6;
-        }
-
-        .close-button {
-            margin-top: 1rem;
-            padding: 0.8rem 2rem;
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .close-button:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 767px) {
-            .order-form-container {
-                margin: 80px 1rem;
-                padding: 1.5rem;
-            }
-
-            .order-summary {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-
-            .product-image {
-                width: 100%;
-                max-width: 300px;
-                height: auto;
-            }
-        }
-
-        .error-message {
-            display: none;
-            text-align: center;
-            padding: 1rem;
-            background: #fee2e2;
-            border: 1px solid #ef4444;
-            border-radius: 8px;
-            margin-top: 1rem;
-            color: #dc2626;
-        }
-
-        .activation-notice {
-            display: none;
-            text-align: center;
-            padding: 1rem;
-            background: #fef3c7;
-            border: 1px solid #f59e0b;
-            border-radius: 8px;
-            margin-top: 1rem;
-            color: #d97706;
-        }
-
-        .loading {
-            position: relative;
-            pointer-events: none;
-        }
-
-        .loading::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            top: 50%;
-            left: 50%;
-            margin: -10px 0 0 -10px;
-            border: 2px solid #ffffff;
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: button-loading-spinner 1s linear infinite;
-        }
-
-        @keyframes button-loading-spinner {
-            from { transform: rotate(0turn); }
-            to { transform: rotate(1turn); }
-        }
-
-        .preview-section {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-        }
-
-        .preview-section h3 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-        }
-
-        .preview-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .preview-item {
-            background: white;
-            padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .preview-item strong {
-            color: #2c3e50;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .preview-item span {
-            color: #666;
-        }
-
-        .redirect-button {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(45deg, #2ecc71, #27ae60);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 1rem;
-        }
-
-        .redirect-button:hover {
-            background: linear-gradient(45deg, #27ae60, #2ecc71);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
-        }
-
-        .redirect-button i {
-            margin-right: 8px;
-        }
-    </style>
+    <link rel="stylesheet" href="order-form.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="order-form-container">
-        <div class="order-summary" id="orderSummary">
-            <!-- Product details will be inserted here -->
-        </div>
-
-        <div class="error-message" id="errorMessage"></div>
-        <div class="activation-notice" id="activationNotice" style="display: none;">
-            <i class="fas fa-info-circle"></i>
-            <p>Please check your email (aayushmanthakulla@gmail.com) for the activation link. Click the link to start receiving orders.</p>
-        </div>
-
-        <form class="order-form" id="orderForm" action="https://formsubmit.co/aayushmanthakulla@gmail.com" method="POST">
-            <!-- FormSubmit Configuration -->
-            <input type="hidden" name="_subject" value="New Melody Makers Order">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_autoresponse" value="Thank you for your order at Melody Makers! We have received your order and will contact you shortly to confirm the details.">
+    <div class="order-container">
+        <div class="order-content">
+            <div class="product-preview">
+                <img id="productImage" src="" alt="Product Image" style="display: none;">
+                <h2 id="productName"></h2>
+            </div>
             
-            <!-- Product Information -->
-            <input type="hidden" name="Product Name" id="productNameField">
-            <input type="hidden" name="Product Price" id="productPriceField">
-            <input type="hidden" name="Product Image" id="productImageField">
-            <input type="hidden" name="Order Reference" id="orderReferenceField">
-            
-            <h2>Place Your Order</h2>
-            
-            <div class="form-group">
-                <label for="name">Full Name *</label>
-                <input type="text" id="name" name="name" required placeholder="Enter your full name">
-            </div>
+            <form id="orderForm" class="order-form">
+                <h1>Order Details</h1>
+                
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
 
-            <div class="form-group">
-                <label for="email">Email Address *</label>
-                <input type="email" id="email" name="email" required placeholder="Enter your email address">
-            </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
 
-            <div class="form-group">
-                <label for="phone">Phone Number *</label>
-                <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
-            </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
 
-            <div class="form-group">
-                <label for="address">Delivery Address *</label>
-                <textarea id="address" name="address" required placeholder="Enter your complete delivery address"></textarea>
-            </div>
+                <div class="form-group">
+                    <label for="address">Delivery Address</label>
+                    <textarea id="address" name="address" required></textarea>
+                </div>
 
-            <div class="form-group">
-                <label for="quantity">Quantity *</label>
-                <input type="number" id="quantity" name="quantity" min="1" value="1" required>
-            </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+                </div>
 
-            <div class="form-group">
-                <label for="message">Additional Notes (Optional)</label>
-                <textarea id="message" name="message" placeholder="Any special instructions or notes for your order"></textarea>
-            </div>
-
-            <button type="submit" class="submit-button" id="submitButton">Place Order</button>
-        </form>
-
-        <div class="success-message" id="successMessage" style="display: none;">
-            <i class="fas fa-check-circle"></i>
-            <h2>Order Placed Successfully!</h2>
-            <p>Thank you for your order. We will contact you shortly.</p>
-            <p>Order Reference: <span id="orderReference"></span></p>
-            <a href="/" class="redirect-button">
-                <i class="fas fa-home"></i> Return to Home
-            </a>
+                <button type="submit" class="submit-button">Place Order</button>
+            </form>
         </div>
     </div>
-
-    <script>
-        // Get URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const productName = urlParams.get('name');
-        const productImage = urlParams.get('image');
-        const productPrice = urlParams.get('price');
-        const productDescription = urlParams.get('description');
-
-        // Update order summary and hidden fields
-        const orderSummary = document.getElementById('orderSummary');
-        if (productName && productImage) {
-            orderSummary.innerHTML = `
-                <img src="${productImage}" alt="${productName}" class="product-image">
-                <div class="product-details">
-                    <h3>${productName}</h3>
-                    <p>${productDescription || ''}</p>
-                    <div class="product-price">${productPrice || ''}</div>
-                </div>
-            `;
-
-            // Set hidden field values
-            document.getElementById('productNameField').value = productName;
-            document.getElementById('productPriceField').value = productPrice;
-            document.getElementById('productImageField').value = productImage;
-        }
-
-        function generateOrderReference() {
-            const timestamp = new Date().getTime();
-            const random = Math.floor(Math.random() * 1000);
-            return `MM-${timestamp}-${random}`;
-        }
-
-        // Set order reference when form loads
-        document.getElementById('orderReferenceField').value = generateOrderReference();
-
-        // Handle form submission
-        document.getElementById('orderForm').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Prevent default form submission
-            
-            const submitButton = document.getElementById('submitButton');
-            const errorMessage = document.getElementById('errorMessage');
-            const activationNotice = document.getElementById('activationNotice');
-            
-            submitButton.classList.add('loading');
-            submitButton.disabled = true;
-            errorMessage.style.display = 'none';
-            activationNotice.style.display = 'none';
-
-            try {
-                const formData = new FormData(this);
-                const response = await fetch(this.action, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (response.ok) {
-                    const responseText = await response.text();
-                    
-                    // Check if this is the first submission (needs activation)
-                    if (responseText.includes('Activate your email')) {
-                        activationNotice.style.display = 'block';
-                        submitButton.classList.remove('loading');
-                        submitButton.disabled = false;
-                    } else {
-                        // Regular order submission
-                        document.getElementById('orderForm').style.display = 'none';
-                        const successMessage = document.getElementById('successMessage');
-                        document.getElementById('orderReference').textContent = document.getElementById('orderReferenceField').value;
-                        successMessage.style.display = 'block';
-                    }
-                } else {
-                    throw new Error('Form submission failed');
-                }
-            } catch (error) {
-                errorMessage.textContent = 'There was an error submitting your order. Please try again or contact us directly.';
-                errorMessage.style.display = 'block';
-                submitButton.classList.remove('loading');
-                submitButton.disabled = false;
-            }
-        });
-    </script>
+    <script src="order-form.js"></script>
 </body>
 </html> 

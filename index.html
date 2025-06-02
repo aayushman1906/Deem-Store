@@ -18,23 +18,18 @@
     <header>
       <nav>
         <div class="logo">
-          <a href="index.html">
-            <img src="main.png" alt="Deem & Store Logo">
-            <span class="logo-text">Deem & Store</span>
-          </a>
+          <img src="main.png" alt="Deem & Store Logo" />
         </div>
         <div class="menu-toggle">
           <i class="fas fa-bars"></i>
         </div>
         <ul class="nav-links">
           <li><a href="#home">Home</a></li>
+          <li><a href="#products">Products</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </nav>
     </header>
-
-    <!-- Add overlay div -->
-    <div class="nav-overlay"></div>
 
     <section id="home" class="hero">
       <div class="hero-content">
@@ -44,37 +39,99 @@
     </section>
 
     <section id="products" class="services">
-      <h2>Our Categories</h2>
+      <h2>Our Products</h2>
       <div class="service-grid">
         <div class="service-card">
-          <a href="electronics.html" target="_blank" class="category-link">
-            <div class="card-content">
-              <img src="https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800&q=80" alt="Electronic Gadgets" />
-              <h3>Electronic Gadgets</h3>
-              <p>Discover our latest collection of cutting-edge electronic gadgets and accessories.</p>
-              <button class="explore-button">Explore Now</button>
-            </div>
-          </a>
+          <div class="card-content">
+            <img src="1.png" alt="Fashion" />
+            <h3>Fashion Collection</h3>
+            <p>
+              Explore our latest fashion trends and stylish outfits for every
+              occasion.
+            </p>
+          </div>
         </div>
         <div class="service-card">
-          <a href="stickers.html" target="_blank" class="category-link">
-            <div class="card-content">
-              <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80" alt="Stickers Collection" />
-              <h3>Stickers</h3>
-              <p>Express yourself with our unique and vibrant collection of stickers.</p>
-              <button class="explore-button">Explore Now</button>
-            </div>
-          </a>
+          <div class="card-content">
+            <img src="2.png" alt="Accessories" />
+            <h3>Accessories</h3>
+            <p>Complete your look with our premium selection of accessories.</p>
+          </div>
         </div>
         <div class="service-card">
-          <a href="footwear.html" target="_blank" class="category-link">
-            <div class="card-content">
-              <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=800&q=80" alt="Footwear" />
-              <h3>Footwear</h3>
-              <p>Step into style with our comfortable and trendy footwear collection.</p>
-              <button class="explore-button">Explore Now</button>
-            </div>
-          </a>
+          <div class="card-content">
+            <img src="3.jpg" alt="Footwear" />
+            <h3>Footwear</h3>
+            <p>
+              Step out in style with our comfortable and trendy footwear
+              collection.
+            </p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="card-content">
+            <img src="4.jpg" alt="Beauty" />
+            <h3>Beauty Products</h3>
+            <p>Enhance your natural beauty with our premium cosmetics range.</p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="card-content">
+            <img src="5.png" alt="Home Decor" />
+            <h3>Home Decor</h3>
+            <p>
+              Transform your living space with our elegant home decoration
+              items.
+            </p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="card-content">
+            <img src="6.png" alt="Electronics" />
+            <h3>Electronics</h3>
+            <p>
+              Stay connected with our latest electronic gadgets and accessories.
+            </p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="card-content">
+            <img src="7.jpg" alt="Sports" />
+            <h3>Sports & Fitness</h3>
+            <p>
+              Achieve your fitness goals with our sports equipment and
+              accessories.
+            </p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="card-content">
+            <img src="8.jpg" alt="Kids" />
+            <h3>Kids Collection</h3>
+            <p>Adorable and comfortable clothing for your little ones.</p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="card-content">
+            <img src="11.png" alt="Jewelry" />
+            <h3>Jewelry</h3>
+            <p>
+              Add sparkle to your style with our exclusive jewelry collection.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="order-section">
+      <div class="order-container">
+        <h2>Shop With Style</h2>
+        <p>Your one-stop destination for fashion and lifestyle</p>
+        <div class="shop-image-container">
+          <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&q=80" class="shop" alt="Fashion Collection">
+        </div>
+        <div class="cta-container">
+          <button onclick="window.open('shop.html', '_blank')" class="order-button">Start Shopping</button>
         </div>
       </div>
     </section>
@@ -84,7 +141,7 @@
         <div class="footer-section contact">
           <h4>Contact Us</h4>
           <p>Email: info@deemstore.com</p>
-          <p>Phone: +977- 9767313071</p>
+          <p>Phone: +1 234 567 890</p>
         </div>
         <div class="footer-section social">
           <h4>Follow Us</h4>
@@ -116,24 +173,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             const menuToggle = document.querySelector('.menu-toggle');
             const navLinks = document.querySelector('.nav-links');
-            const overlay = document.querySelector('.nav-overlay');
             
             menuToggle.addEventListener('click', function() {
                 navLinks.classList.toggle('active');
-                overlay.classList.toggle('active');
-            });
-
-            // Close menu when clicking overlay
-            overlay.addEventListener('click', function() {
-                navLinks.classList.remove('active');
-                overlay.classList.remove('active');
             });
 
             // Close menu when clicking outside
             document.addEventListener('click', function(event) {
                 if (!event.target.closest('.nav-links') && !event.target.closest('.menu-toggle')) {
                     navLinks.classList.remove('active');
-                    overlay.classList.remove('active');
                 }
             });
         });
@@ -151,6 +199,5 @@
         window.open('cart.html', '_blank');
       }
     </script>
-    
   </body>
 </html>

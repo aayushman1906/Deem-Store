@@ -14,13 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('productImage').style.display = 'none';
     }
 
-    if (productName) {
-        document.getElementById('hiddenProductName').value = productName;
-    }
-    if (productImage) {
-        document.getElementById('hiddenProductImage').value = productImage;
-    }
-
     const orderForm = document.getElementById('orderForm');
     orderForm.addEventListener('submit', async function(e) {
         e.preventDefault();
