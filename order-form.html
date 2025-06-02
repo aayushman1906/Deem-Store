@@ -119,27 +119,26 @@
             display: none;
             text-align: center;
             padding: 2rem;
-            background: #eafaf1;
+            background: white;
             border-radius: 10px;
-            margin-top: 1rem;
-            animation: fadeIn 0.5s ease-out;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .success-message i {
-            font-size: 4rem;
+            font-size: 3rem;
             color: #2ecc71;
             margin-bottom: 1rem;
         }
 
         .success-message h2 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
         }
 
         .success-message p {
             color: #666;
             margin-bottom: 0.5rem;
-            line-height: 1.6;
         }
 
         .close-button {
@@ -157,11 +156,6 @@
         .close-button:hover {
             background: #2980b9;
             transform: translateY(-2px);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 767px) {
@@ -198,11 +192,23 @@
             display: none;
             text-align: center;
             padding: 1rem;
-            background: #fef3c7;
-            border: 1px solid #f59e0b;
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
             border-radius: 8px;
             margin-top: 1rem;
-            color: #d97706;
+            color: #856404;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .activation-notice i {
+            font-size: 1.5rem;
+        }
+
+        .activation-notice p {
+            margin: 0;
+            line-height: 1.5;
         }
 
         .loading {
@@ -292,78 +298,43 @@
         }
 
         .thank-you-container {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             text-align: center;
             padding: 2rem;
             background: white;
-            border-radius: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .thank-you-container h1 {
-            color: #3498db;
-            font-size: 2.5rem;
+        .thank-you-container i {
+            font-size: 3rem;
+            color: #2ecc71;
             margin-bottom: 1rem;
+        }
+
+        .thank-you-container h2 {
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
         }
 
         .thank-you-container p {
             color: #666;
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-        }
-
-        .order-reference {
-            font-weight: 500;
-            color: #2c3e50;
-            background: #f8f9fa;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            margin: 1rem 0;
+            margin-bottom: 0.5rem;
         }
 
         .back-home {
             display: inline-block;
-            padding: 1rem 2rem;
-            background: linear-gradient(45deg, #3498db, #2980b9);
+            padding: 0.8rem 1.5rem;
+            background: #3498db;
             color: white;
             text-decoration: none;
             border-radius: 5px;
-            transition: all 0.3s ease;
             margin-top: 1rem;
+            transition: background 0.3s ease;
         }
 
         .back-home:hover {
-            background: linear-gradient(45deg, #2980b9, #3498db);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
-        }
-
-        .back-home i {
-            margin-right: 8px;
-        }
-
-        .activation-notice {
-            background: #fff3cd;
-            border: 1px solid #ffeeba;
-            color: #856404;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .activation-notice i {
-            font-size: 1.5rem;
-        }
-
-        .activation-notice p {
-            margin: 0;
-            line-height: 1.5;
+            background: #2980b9;
         }
     </style>
 </head>
@@ -429,12 +400,11 @@
 
         <div class="success-message" id="successMessage" style="display: none;">
             <div class="thank-you-container">
-                <h1>Thank You!</h1>
-                <p>Your order has been placed successfully. We will contact you shortly.</p>
-                <p class="order-reference">Order Reference: <span id="orderReference"></span></p>
-                <a href="/" class="back-home">
-                    <i class="fas fa-home"></i> Back to Home
-                </a>
+                <i class="fas fa-check-circle"></i>
+                <h2>Thank You!</h2>
+                <p>Your order has been placed.</p>
+                <p>Order #<span id="orderReference"></span></p>
+                <a href="/" class="back-home">Back to Home</a>
             </div>
         </div>
     </div>
