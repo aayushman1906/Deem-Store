@@ -347,7 +347,7 @@
         <div class="error-message" id="errorMessage"></div>
         <div class="activation-notice" id="activationNotice" style="display: none;">
             <i class="fas fa-info-circle"></i>
-            <p>Please check your email (aayushmanthakulla@gmail.com) for the activation link. Click the link to start receiving orders.</p>
+            <p>Please check your email for the activation link. If you don't see it, please check your spam folder.</p>
         </div>
 
         <form class="order-form" id="orderForm" action="https://formsubmit.co/aayushmanthakulla@gmail.com" method="POST">
@@ -356,6 +356,7 @@
             <input type="hidden" name="_template" value="table">
             <input type="hidden" name="_captcha" value="false">
             <input type="hidden" name="_autoresponse" value="Thank you for your order at Melody Makers! We have received your order and will contact you shortly to confirm the details.">
+            <input type="hidden" name="_next" value="https://deemand.com/thanks.html">
             
             <!-- Product Information -->
             <input type="hidden" name="Product Name" id="productNameField">
@@ -446,7 +447,7 @@
 
         // Handle form submission
         document.getElementById('orderForm').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Prevent default form submission
+            event.preventDefault();
             
             const submitButton = document.getElementById('submitButton');
             const errorMessage = document.getElementById('errorMessage');
@@ -458,22 +459,34 @@
             activationNotice.style.display = 'none';
 
             try {
+                // First, try to submit the form
                 const formData = new FormData(this);
                 const response = await fetch(this.action, {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
                 });
 
+                const result = await response.text();
+                
                 if (response.ok) {
-                    const responseText = await response.text();
-                    
-                    // Check if this is the first submission (needs activation)
-                    if (responseText.includes('Activate your email')) {
+                    if (result.includes('Activate your email')) {
+                        // Show activation notice
                         activationNotice.style.display = 'block';
+                        activationNotice.innerHTML = `
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <p><strong>Important:</strong> Please check your email (aayushmanthakulla@gmail.com) for the activation link.</p>
+                                <p>If you don't see it in your inbox, please check your spam folder.</p>
+                                <p>After clicking the activation link, you can submit your order again.</p>
+                            </div>
+                        `;
                         submitButton.classList.remove('loading');
                         submitButton.disabled = false;
                     } else {
-                        // Regular order submission
+                        // Show success message
                         document.getElementById('orderForm').style.display = 'none';
                         const successMessage = document.getElementById('successMessage');
                         document.getElementById('orderReference').textContent = document.getElementById('orderReferenceField').value;
@@ -483,7 +496,16 @@
                     throw new Error('Form submission failed');
                 }
             } catch (error) {
-                errorMessage.textContent = 'There was an error submitting your order. Please try again or contact us directly.';
+                console.error('Form submission error:', error);
+                errorMessage.innerHTML = `
+                    <p><strong>Error:</strong> There was a problem submitting your order.</p>
+                    <p>Please try these steps:</p>
+                    <ol>
+                        <li>Check your internet connection</li>
+                        <li>Try submitting again</li>
+                        <li>If the problem persists, please contact us directly</li>
+                    </ol>
+                `;
                 errorMessage.style.display = 'block';
                 submitButton.classList.remove('loading');
                 submitButton.disabled = false;
