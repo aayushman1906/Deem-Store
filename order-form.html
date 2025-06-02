@@ -299,8 +299,12 @@
         </div>
 
         <div class="error-message" id="errorMessage"></div>
+        <div class="activation-notice" id="activationNotice" style="display: none;">
+            <i class="fas fa-info-circle"></i>
+            <p>Please check your email (aayushmanthakulla@gmail.com) for the activation link. Click the link to start receiving orders.</p>
+        </div>
 
-        <form class="order-form" id="orderForm" action="https://formsubmit.co/el/your-activation-code" method="POST">
+        <form class="order-form" id="orderForm" action="https://formsubmit.co/aayushmanthakulla@gmail.com" method="POST">
             <!-- FormSubmit Configuration -->
             <input type="hidden" name="_subject" value="New Melody Makers Order">
             <input type="hidden" name="_template" value="table">
@@ -399,11 +403,15 @@
             event.preventDefault(); // Prevent default form submission
             
             const submitButton = document.getElementById('submitButton');
+            const errorMessage = document.getElementById('errorMessage');
+            const activationNotice = document.getElementById('activationNotice');
+            
             submitButton.classList.add('loading');
             submitButton.disabled = true;
+            errorMessage.style.display = 'none';
+            activationNotice.style.display = 'none';
 
             try {
-                // First submission to get activation code
                 const formData = new FormData(this);
                 const response = await fetch(this.action, {
                     method: 'POST',
@@ -411,16 +419,24 @@
                 });
 
                 if (response.ok) {
-                    // Show success message
-                    document.getElementById('orderForm').style.display = 'none';
-                    const successMessage = document.getElementById('successMessage');
-                    document.getElementById('orderReference').textContent = document.getElementById('orderReferenceField').value;
-                    successMessage.style.display = 'block';
+                    const responseText = await response.text();
+                    
+                    // Check if this is the first submission (needs activation)
+                    if (responseText.includes('Activate your email')) {
+                        activationNotice.style.display = 'block';
+                        submitButton.classList.remove('loading');
+                        submitButton.disabled = false;
+                    } else {
+                        // Regular order submission
+                        document.getElementById('orderForm').style.display = 'none';
+                        const successMessage = document.getElementById('successMessage');
+                        document.getElementById('orderReference').textContent = document.getElementById('orderReferenceField').value;
+                        successMessage.style.display = 'block';
+                    }
                 } else {
                     throw new Error('Form submission failed');
                 }
             } catch (error) {
-                const errorMessage = document.getElementById('errorMessage');
                 errorMessage.textContent = 'There was an error submitting your order. Please try again or contact us directly.';
                 errorMessage.style.display = 'block';
                 submitButton.classList.remove('loading');
